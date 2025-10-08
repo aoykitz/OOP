@@ -1,96 +1,37 @@
 /**
- * @file spheregenerator.h
- * @brief Заголовочный файл для класса SphereGenerator
- * @author Ваше Имя
+ * @file point3d.h
+ * @brief Заголовочный файл для структуры Point3D
+ * @author Adam
  * @version 1.0
- * @date 2023-12-01
+ * @date 2025
  */
 
 #pragma once
-#include "point3d.h"
 
  /**
-  * @class SphereGenerator
-  * @brief Класс для генерации случайных точек между двумя концентрическими сферами
+  * @struct Point3D
+  * @brief Структура для представления точки в трехмерном пространстве
   *
-  * Этот класс генерирует точки, равномерно распределенные в объеме между
-  * двумя концентрическими сферами с заданными радиусами и центром.
+  * Данная структура хранит координаты точки в трехмерном пространстве
+  * и предоставляет методы для работы с ними.
   */
-class SphereGenerator {
-private:
-    double centerX; ///< Координата X центра сфер
-    double centerY; ///< Координата Y центра сфер
-    double centerZ; ///< Координата Z центра сфер
-    double radius1; ///< Внутренний радиус сферы (R1)
-    double radius2; ///< Внешний радиус сферы (R2)
+struct Point3D {
+    double x; ///< Координата X точки
+    double y; ///< Координата Y точки  
+    double z; ///< Координата Z точки
 
-public:
     /**
-     * @brief Конструктор генератора сфер
-     * @param cx Координата X центра (по умолчанию 0)
-     * @param cy Координата Y центра (по умолчанию 0)
-     * @param cz Координата Z центра (по умолчанию 0)
-     * @param r1 Внутренний радиус R1 (по умолчанию 1)
-     * @param r2 Внешний радиус R2 (по умолчанию 2)
+     * @brief Конструктор точки
+     * @param x Координата X (по умолчанию 0.0)
+     * @param y Координата Y (по умолчанию 0.0)
+     * @param z Координата Z (по умолчанию 0.0)
      */
-    SphereGenerator(double cx = 0, double cy = 0, double cz = 0, double r1 = 1, double r2 = 2);
+    Point3D(double x = 0, double y = 0, double z = 0);
 
     /**
-     * @brief Генерация случайной точки между сферами
-     * @return Point3D Случайная точка в сферическом слое
+     * @brief Вывод координат точки на экран
      *
-     * Использует сферические координаты для равномерного распределения точек
-     * в объеме между двумя концентрическими сферами.
+     * Формат вывода: (x, y, z)
      */
-    Point3D generatePoint();
-
-    /**
-     * @brief Установка центра сфер
-     * @param cx Координата X центра
-     * @param cy Координата Y центра
-     * @param cz Координата Z центра
-     */
-    void setCenter(double cx, double cy, double cz);
-
-    /**
-     * @brief Установка радиусов сфер
-     * @param r1 Внутренний радиус R1
-     * @param r2 Внешний радиус R2
-     */
-    void setRadii(double r1, double r2);
-
-    /**
-     * @brief Получение координаты X центра
-     * @return Координата X центра сфер
-     */
-    double getCenterX() const;
-
-    /**
-     * @brief Получение координаты Y центра
-     * @return Координата Y центра сфер
-     */
-    double getCenterY() const;
-
-    /**
-     * @brief Получение координаты Z центра
-     * @return Координата Z центра сфер
-     */
-    double getCenterZ() const;
-
-    /**
-     * @brief Получение внутреннего радиуса
-     * @return Внутренний радиус R1
-     */
-    double getR1() const;
-
-    /**
-     * @brief Получение внешнего радиуса
-     * @return Внешний радиус R2
-     */
-    double getR2() const;
-
-    /**
-     * @brief Вывод текущих настроек генератора
-     */
-    void printSettings();
+    void print();
 };
