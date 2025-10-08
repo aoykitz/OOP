@@ -1,183 +1,141 @@
 /**
- * @file main.cpp
- * @brief Главный файл программы для генерации точек между концентрическими сферами
- * @author Ваше Имя
- * @version 1.0
- * @date 2023-12-01
- * 
- * @mainpage Лабораторная работа №1 по ООП
- * 
- * Программа для генерации случайных точек в объеме между двумя концентрическими сферами.
- * 
- * Функциональность:
- * - Настройка центра и радиусов сфер
- * - Генерация случайных точек в сферическом слое
- * - Просмотр и ручное добавление точек
- * - Сохранение точек в файл
- * - Создание Python скрипта для визуализации
- * 
- * @see SphereGenerator
- * @see Point3D
- * @see FileManager
- * @see Menu
+ * @file spheregenerator.cpp
+ * @brief Реализация методов класса SphereGenerator
+ * @author Adam
+ * @date 2025
  */
 
-#include <iostream>
-#include "point3d.h"
 #include "spheregenerator.h"
-#include "filemanager.h"
-#include "menu.h"
+#include <cmath>
+#include <random>
+#include <iostream>
 using namespace std;
 
-// Максимальное количество точек
-const int MAX_POINTS = 10000;
+// Определяем константу PI, если она не определена
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 /**
- * @brief Главная функция программы
- * @return int Код завершения программы
+ * @brief Конструктор класса SphereGenerator
+ * @param cx Координата X центра сфер
+ * @param cy Координата Y центра сфер
+ * @param cz Координата Z центра сфер
+ * @param r1 Внутренний радиус R1
+ * @param r2 Внешний радиус R2
  * 
- * Создает экземпляр генератора точек и предоставляет пользователю
- * интерактивное меню для работы с программой.
+ * Инициализирует генератор с заданными параметрами сфер. Если параметры
+ * не указаны, используются значения по умолчанию.
  */
-int main() {
-    setlocale(LC_ALL, "Russian");
+SphereGenerator::SphereGenerator(double cx, double cy, double cz, double r1, double r2) 
+    : centerX(cx), centerY(cy), centerZ(cz), radius1(r1), radius2(r2) {}
+
+/**
+ * @brief Генерация случайной точки между концентрическими сферами
+ * @return Point3D Случайная точка в сферическом слое
+ * 
+ * Алгоритм генерации:
+ * 1. Генерация случайных параметров в сферических координатах
+ * 2. Преобразование в декартовы координаты относительно центра
+ * 3. Возврат точки с равномерным распределением в объеме
+ */
+Point3D SphereGenerator::generatePoint() {
+    // Инициализация генератора случайных чисел
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<double> dist(0.0, 1.0);
     
-    SphereGenerator generator;
-    Point3D points[MAX_POINTS]; // Статический массив вместо vector
-    int pointCount = 0;         // Текущее количество точек
-    int choice;
+    // Генерация случайных параметров в сферических координатах
+    double u = dist(gen); // Для радиуса
+    double v = dist(gen); // Для угла theta
+    double w = dist(gen); // Для угла phi
     
-    cout << "=== ПРОГРАММА ДЛЯ ГЕНЕРАЦИИ ТОЧЕК МЕЖДУ КОНЦЕНТРИЧЕСКИМИ СФЕРАМИ ===" << endl;
-    cout << "Вариант №4: Точки заполняют область пространства между двумя концентрическими сферами" << endl;
-    cout << "Максимальное количество точек: " << MAX_POINTS << endl;
+    // Линейная интерполяция радиуса между R1 и R2
+    double r = radius1 + (radius2 - radius1) * u;
     
-    do {
-        Menu::showMainMenu();
-        cin >> choice;
-        Menu::clearInput();
-        
-        switch(choice) {
-            case 1: {
-                // Настройка параметров сфер
-                double cx, cy, cz, r1, r2;
-                cout << "Введите координаты центра сфер (x y z): ";
-                cin >> cx >> cy >> cz;
-                cout << "Введите внутренний радиус R1 (может быть 0): ";
-                cin >> r1;
-                cout << "Введите внешний радиус R2: ";
-                cin >> r2;
-                
-                generator.setCenter(cx, cy, cz);
-                generator.setRadii(r1, r2);
-                cout << "Настройки сохранены!" << endl;
-                break;
-            }
-            
-            case 2: {
-                // Генерация точек
-                int count;
-                cout << "Сколько точек сгенерировать? ";
-                cin >> count;
-                
-                if (count <= 0) {
-                    cout << "Ошибка! Введите положительное число." << endl;
-                    break;
-                }
-                
-                if (pointCount + count > MAX_POINTS) {
-                    cout << "Ошибка! Превышен максимальный лимит точек (" << MAX_POINTS << ")" << endl;
-                    cout << "Доступно для генерации: " << MAX_POINTS - pointCount << " точек" << endl;
-                    break;
-                }
-                
-                for (int i = 0; i < count; i++) {
-                    points[pointCount + i] = generator.generatePoint();
-                }
-                pointCount += count;
-                
-                cout << "Сгенерировано " << count << " точек!" << endl;
-                cout << "Всего точек: " << pointCount << endl;
-                break;
-            }
-            
-            case 3: {
-                // Просмотр точки
-                if (pointCount == 0) {
-                    cout << "Нет точек! Сначала сгенерируйте точки." << endl;
-                    break;
-                }
-                
-                int index;
-                cout << "Введите номер точки (0-" << pointCount-1 << "): ";
-                cin >> index;
-                
-                if (index < 0 || index >= pointCount) {
-                    cout << "Неверный номер!" << endl;
-                    break;
-                }
-                
-                cout << "Точка " << index << ": ";
-                points[index].print();
-                break;
-            }
-            
-            case 4: {
-                // Ручное добавление точки
-                if (pointCount >= MAX_POINTS) {
-                    cout << "Ошибка! Достигнут максимальный лимит точек (" << MAX_POINTS << ")" << endl;
-                    break;
-                }
-                
-                double x, y, z;
-                cout << "Введите координаты точки (x y z): ";
-                cin >> x >> y >> z;
-                
-                points[pointCount] = Point3D(x, y, z);
-                pointCount++;
-                
-                cout << "Точка добавлена! Всего точек: " << pointCount << endl;
-                break;
-            }
-            
-            case 5: {
-                // Сохранение и создание скрипта визуализации
-                if (pointCount == 0) {
-                    cout << "Нет точек для сохранения!" << endl;
-                    break;
-                }
-                
-                FileManager::savePointsToFile(points, pointCount);
-                FileManager::createPythonScript(generator.getCenterX(), generator.getCenterY(), 
-                                  generator.getCenterZ(), generator.getR1(), generator.getR2());
-                
-                cout << "\nИнструкция для визуализации:" << endl;
-                cout << "1. Установите Python с сайта python.org" << endl;
-                cout << "2. Установите необходимые библиотеки: pip install matplotlib numpy" << endl;
-                cout << "3. Запустите скрипт визуализации: python visualize.py" << endl;
-                break;
-            }
-            
-            case 6: {
-                // Показать настройки
-                cout << "\nТекущие настройки:" << endl;
-                generator.printSettings();
-                cout << "Количество точек в массиве: " << pointCount << endl;
-                cout << "Максимальное количество точек: " << MAX_POINTS << endl;
-                break;
-            }
-            
-            case 0: {
-                cout << "Выход из программы..." << endl;
-                break;
-            }
-            
-            default: {
-                cout << "Неверный выбор! Попробуйте снова." << endl;
-                break;
-            }
-        }
-        
-    } while (choice != 0);
+    // Углы в сферических координатах
+    double theta = 2 * M_PI * v;        // Азимутальный угол [0, 2π]
+    double phi = acos(2 * w - 1.0);     // Полярный угол [0, π]
     
-    return 0;
+    // Преобразование сферических координат в декартовы
+    double sin_phi = sin(phi);
+    double x = centerX + r * sin_phi * cos(theta);
+    double y = centerY + r * sin_phi * sin(theta);
+    double z = centerZ + r * cos(phi);
+    
+    return Point3D(x, y, z);
+}
+
+/**
+ * @brief Установка нового центра сфер
+ * @param cx Новая координата X центра
+ * @param cy Новая координата Y центра
+ * @param cz Новая координата Z центра
+ */
+void SphereGenerator::setCenter(double cx, double cy, double cz) {
+    centerX = cx;
+    centerY = cy;
+    centerZ = cz;
+}
+
+/**
+ * @brief Установка новых радиусов сфер
+ * @param r1 Новый внутренний радиус R1
+ * @param r2 Новый внешний радиус R2
+ * 
+ * @note R1 должен быть меньше или равен R2
+ */
+void SphereGenerator::setRadii(double r1, double r2) {
+    radius1 = r1;
+    radius2 = r2;
+}
+
+/**
+ * @brief Получение координаты X центра сфер
+ * @return Текущая координата X центра
+ */
+double SphereGenerator::getCenterX() const {
+    return centerX;
+}
+
+/**
+ * @brief Получение координаты Y центра сфер
+ * @return Текущая координата Y центра
+ */
+double SphereGenerator::getCenterY() const {
+    return centerY;
+}
+
+/**
+ * @brief Получение координаты Z центра сфер
+ * @return Текущая координата Z центра
+ */
+double SphereGenerator::getCenterZ() const {
+    return centerZ;
+}
+
+/**
+ * @brief Получение внутреннего радиуса R1
+ * @return Текущее значение внутреннего радиуса
+ */
+double SphereGenerator::getR1() const {
+    return radius1;
+}
+
+/**
+ * @brief Получение внешнего радиуса R2
+ * @return Текущее значение внешнего радиуса
+ */
+double SphereGenerator::getR2() const {
+    return radius2;
+}
+
+/**
+ * @brief Вывод текущих настроек генератора на экран
+ * 
+ * Отображает текущий центр и радиусы сфер в удобочитаемом формате.
+ */
+void SphereGenerator::printSettings() {
+    cout << "Центр: (" << centerX << ", " << centerY << ", " << centerZ << ")" << endl;
+    cout << "Радиусы: R1=" << radius1 << ", R2=" << radius2 << endl;
 }
