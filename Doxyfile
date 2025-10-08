@@ -1,0 +1,11 @@
+PROJECT_NAME           = "Лабораторная работа №1 по ООП"
+PROJECT_BRIEF          = "Случайное заполнение точками область пространства между двумя концентрическими сферами радиусов R₁ и R₂"  
+OUTPUT_DIRECTORY       = docs  
+GENERATE_LATEX         = NO  
+GENERATE_HTML          = YES  
+EXTRACT_ALL            = YES                    # Все объекты задокументированы
+EXTRACT_PRIVATE        = YES                    # Включать ли в документацию приватные члены класса
+EXTRACT_STATIC         = YES                    # Включать ли в документацию статичные элементы
+INPUT                  = src include            # Где искать документировнный исходный код
+FILE_PATTERNS          = *.h *.cpp *.hpp  
+RECURSIVE              = YES                    # Искать ли исходные файлы в подкаталогах
