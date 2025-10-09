@@ -1,9 +1,8 @@
 /**
  * @file filemanager.cpp
  * @brief Реализация методов класса FileManager
- * @author Ваше Имя
- * @version 1.0
- * @date 2023-12-01
+ * @author Adam
+ * @date 2025
  */
 
 #include "filemanager.h"
