@@ -23,7 +23,7 @@ using namespace std;
 void FileManager::savePointsToFile(Point3D* points, int pointCount) {
     ofstream file("points.txt");
     if (!file) {
-        cout << "Ошибка создания файла!" << endl;
+        cout << "Ошибка создания файла" << endl;
         return;
     }
     
@@ -52,9 +52,6 @@ void FileManager::savePointsToFile(Point3D* points, int pointCount) {
  */
 void FileManager::createPythonScript(double centerX, double centerY, double centerZ, 
                                    double R1, double R2) {
-    // Просто сообщаем, что нужно создать файл visualize.py вручную
-    cout << "Для визуализации создайте файл visualize.py в папке с программой" << endl;
-    cout << "Содержимое файла можно взять из инструкции" << endl;
     cout << "Параметры для визуализации:" << endl;
     cout << "Центр: (" << centerX << ", " << centerY << ", " << centerZ << ")" << endl;
     cout << "Радиусы: R1=" << R1 << ", R2=" << R2 << endl;
