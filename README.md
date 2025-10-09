@@ -1,21 +1,42 @@
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -O2
-TARGET = sphere_points
-SOURCES = main.cpp point3d.cpp spheregenerator.cpp filemanager.cpp menu.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-
-all: $(TARGET)
-
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-clean:
-	rm -f $(TARGET) $(OBJECTS) points.txt visualize.py
-
-run: $(TARGET)
-	./$(TARGET)
-
-.PHONY: all clean run
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-std=c++11",
+                "-Wall",
+                "-Wextra",
+                "-O2",
+                "-o",
+                "sphere_points",
+                "main.cpp",
+                "point3d.cpp", 
+                "spheregenerator.cpp",
+                "filemanager.cpp",
+                "menu.cpp"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm",
+            "args": ["-f", "sphere_points", "points.txt"],
+            "group": "build"
+        },
+        {
+            "label": "run",
+            "type": "shell", 
+            "command": "./sphere_points",
+            "group": "test",
+            "dependsOn": "build"
+        }
+    ]
+}
