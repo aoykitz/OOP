@@ -68,7 +68,7 @@ int main() {
                 
                 generator.setCenter(cx, cy, cz);
                 generator.setRadii(r1, r2);
-                cout << "Настройки сохранены!" << endl;
+                cout << "Настройки сохранены" << endl;
                 break;
             }
             
@@ -79,12 +79,11 @@ int main() {
                 cin >> count;
                 
                 if (count <= 0) {
-                    cout << "Ошибка! Введите положительное число." << endl;
                     break;
                 }
                 
                 if (pointCount + count > MAX_POINTS) {
-                    cout << "Ошибка! Превышен максимальный лимит точек (" << MAX_POINTS << ")" << endl;
+                    cout << "Превышен максимальный лимит точек (" << MAX_POINTS << ")" << endl;
                     cout << "Доступно для генерации: " << MAX_POINTS - pointCount << " точек" << endl;
                     break;
                 }
@@ -102,7 +101,7 @@ int main() {
             case 3: {
                 // Просмотр точки
                 if (pointCount == 0) {
-                    cout << "Нет точек! Сначала сгенерируйте точки." << endl;
+                    cout << "Сначала сгенерируйте точки." << endl;
                     break;
                 }
                 
@@ -123,7 +122,7 @@ int main() {
             case 4: {
                 // Ручное добавление точки
                 if (pointCount >= MAX_POINTS) {
-                    cout << "Ошибка! Достигнут максимальный лимит точек (" << MAX_POINTS << ")" << endl;
+                    cout << "Достигнут максимальный лимит точек (" << MAX_POINTS << ")" << endl;
                     break;
                 }
                 
@@ -134,26 +133,20 @@ int main() {
                 points[pointCount] = Point3D(x, y, z);
                 pointCount++;
                 
-                cout << "Точка добавлена! Всего точек: " << pointCount << endl;
+                cout << "Всего точек: " << pointCount << endl;
                 break;
             }
             
             case 5: {
                 // Сохранение и создание скрипта визуализации
                 if (pointCount == 0) {
-                    cout << "Нет точек для сохранения!" << endl;
+                    cout << "Нет точек для сохранения" << endl;
                     break;
                 }
                 
                 FileManager::savePointsToFile(points, pointCount);
                 FileManager::createPythonScript(generator.getCenterX(), generator.getCenterY(), 
                                   generator.getCenterZ(), generator.getR1(), generator.getR2());
-                
-                cout << "\nИнструкция для визуализации:" << endl;
-                cout << "1. Создайте файл visualize.py в папке с программой" << endl;
-                cout << "2. Скопируйте в него код из инструкции" << endl;
-                cout << "3. Установите Python и библиотеки: pip install matplotlib numpy" << endl;
-                cout << "4. Запустите: python visualize.py" << endl;
                 break;
             }
             
@@ -172,7 +165,7 @@ int main() {
             }
             
             default: {
-                cout << "Неверный выбор! Попробуйте снова." << endl;
+                cout << "Неверный выбор. Попробуйте снова." << endl;
                 break;
             }
         }
