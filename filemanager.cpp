@@ -13,7 +13,7 @@ using namespace std;
 void FileManager::savePointsToFile(Point3D* points, int pointCount) {
     ofstream file("points.txt");
     if (!file) {
-        cout << "Ошибка создания файла!" << endl;
+        cout << "Ошибка создания файла" << endl;
         return;
     }
 
